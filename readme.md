@@ -13,3 +13,11 @@ call port
 nc 146.136.88.38 8888
 ```
 
+needs:
+```
+sudo apt install gpiod
+sudo apt install libgpiod-dev
+```
+
+
+
