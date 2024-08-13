@@ -5,7 +5,7 @@ might need to add the /build folder manually
 
 free port:
 ```
-sudo lsof -t -i:8000 | xargs sudo kill
+sudo lsof -t -i:8888 | xargs sudo kill
 ```
 
 call port
