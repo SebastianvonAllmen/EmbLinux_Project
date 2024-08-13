@@ -20,7 +20,7 @@ int main(int argc , char *argv[]){
 	
 	//Bind
 	if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0){
-		puts("bind failed");
+		puts("bind failed, port may be already used");
 		return 1;
 	}
 	puts("bind done");
