@@ -3,7 +3,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h> // For inet_addr
 #include <unistd.h>    // For write, close
-#include <gpiod.h>     // For GPIO
+#include "gpio_control.h"
 
 #define BUFFER_SIZE 1024
 
@@ -36,22 +36,13 @@ int main(int argc, char *argv[]) {
     listen(socket_desc, 3);
 
     // GPIO Setup
-    struct gpiod_chip *chip = gpiod_chip_open_by_name("gpiochip0");
+    struct gpiod_chip *chip = setup_gpio_chip("gpiochip0");
     if (!chip) {
-        perror("gpiod_chip_open_by_name");
         return 1;
     }
-    struct gpiod_line *line = gpiod_chip_get_line(chip, 21);
+    struct gpiod_line *line = setup_gpio_line(chip, 21);
     if (!line) {
-        perror("gpiod_chip_get_line");
-        gpiod_chip_close(chip);
-        return 1;
-    }
-
-    // Request the line as an output, initially set to low
-    if (gpiod_line_request_output(line, "outputGpio21", 0) < 0) {
-        perror("gpiod_line_request_output");
-        gpiod_chip_close(chip);
+        close_gpio(chip, line);
         return 1;
     }
 
@@ -61,12 +52,11 @@ int main(int argc, char *argv[]) {
     new_socket = accept(socket_desc, (struct sockaddr *)&client, (socklen_t *)&c);
     if (new_socket < 0) {
         perror("Accept failed");
-        gpiod_chip_close(chip);
+        close_gpio(chip, line);
         return 1;
     }
     puts("Connection accepted");
     write(new_socket, "Controll LED by writing: on,off\n", strlen("Controll LED by writing: on,off\n"));
-
 
     // Communicate with the client
     while ((read_size = recv(new_socket, client_message, BUFFER_SIZE, 0)) > 0) {
@@ -74,11 +64,11 @@ int main(int argc, char *argv[]) {
     
         // Check the received message and act accordingly
         if (strncmp(client_message, "on", 2) == 0) {
-            gpiod_line_set_value(line, 1); // Turn the LED on
+            set_gpio_value(line, 1); // Turn the LED on
             puts("LED turned on");
             write(new_socket, "LED turned on\n", strlen("LED turned on\n"));
         } else if (strncmp(client_message, "off", 3) == 0) {
-            gpiod_line_set_value(line, 0); // Turn the LED off
+            set_gpio_value(line, 0); // Turn the LED off
             puts("LED turned off");
             write(new_socket, "LED turned off\n", strlen("LED turned off\n"));
         } else {
@@ -99,8 +89,7 @@ int main(int argc, char *argv[]) {
     close(new_socket);
 
     // Release GPIO line and close chip
-    gpiod_line_release(line);
-    gpiod_chip_close(chip);
+    close_gpio(chip, line);
 
     return 0;
 }

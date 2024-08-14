@@ -4,9 +4,11 @@ project(TcpServer)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GPIOD REQUIRED libgpiod)
 
-add_executable(TcpServer main.c)
+include_directories(header)
 
-target_link_libraries(TcpServer ${GPIOD_LIBRARIES})
+add_executable(EmbLinux_Project main.c scource/gpio_control.c)
+
+target_link_libraries(EmbLinux_Project ${GPIOD_LIBRARIES})
 
 # Debug
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
