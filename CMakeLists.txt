@@ -6,7 +6,7 @@ pkg_check_modules(GPIOD REQUIRED libgpiod)
 
 include_directories(header)
 
-add_executable(EmbLinux_Project main.c scource/gpio_control.c)
+add_executable(EmbLinux_Project main.c scource/gpio_control.c scource/tcp_helper.c)
 
 target_link_libraries(EmbLinux_Project ${GPIOD_LIBRARIES})
 
