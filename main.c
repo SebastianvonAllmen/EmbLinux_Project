@@ -6,6 +6,7 @@
 #include "step_init.h"
 #include "step_idle.h"
 #include "step_search.h"
+#include "step_choose.h"
 #include "step_stop.h"
 
 #define BUFFER_SIZE 1024
@@ -22,12 +23,15 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    bool is_server = false;
     if (strcmp(argv[1], "server") == 0) { 
         // Server mode
         ret_val = idle();
         if (ret_val != 0) {
             return 1;
         }
+
+        is_server = true;
     } else if (strcmp(argv[1], "client") == 0) {
         // Client mode
         if (argc < 3) {
@@ -51,6 +55,7 @@ int main(int argc, char *argv[]) {
     }
 
     // GAMELOOP
+    choose(is_server);
 
     stop();
 

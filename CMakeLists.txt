@@ -12,6 +12,7 @@ add_executable(EmbLinux_Project main.c
     source/step_init.c 
     source/step_idle.c 
     source/step_search.c 
+    source/step_choose.c
     source/step_stop.c
 )
 
