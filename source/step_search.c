@@ -8,7 +8,7 @@
 #include "tcp_helper.h"
 
 int search(const char *server_ip) {
-    if (connect_server(server_ip) != 0) {
+    if (connect_to_server(server_ip) != 0) {
         return 1;
     }  
 

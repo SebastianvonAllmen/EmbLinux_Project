@@ -84,9 +84,16 @@ void close_socket() {
     }
 }
 
-int connect_server(const char *server_ip) {
-    // Create Server config
+int connect_to_server(const char *server_ip) {
+    int client_socket;
     struct sockaddr_in server;
+
+    // Create a new socket
+    client_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if (client_socket == -1) {
+        perror("Could not create socket");
+        return -1;
+    }
 
     // Prepare the sockaddr_in structure
     server.sin_addr.s_addr = inet_addr(server_ip);
@@ -94,11 +101,16 @@ int connect_server(const char *server_ip) {
     server.sin_port = htons(8888); 
 
     // Connect to the server
-    if (connect(socket_desc, (struct sockaddr *)&server, sizeof(server)) < 0) {
+    if (connect(client_socket, (struct sockaddr *)&server, sizeof(server)) < 0) {
         perror("Connection failed");
-        close(socket_desc);
-        return 1;
+        close(client_socket);
+        return -1;
     }
+
+    // Store the connected socket descriptor in gen_socket if needed
+    gen_socket = client_socket;
 
     return 0;
 }
+
+

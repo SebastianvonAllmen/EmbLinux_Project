@@ -17,6 +17,7 @@ device ip for mvp
 ````
 146.136.88.38 - SvA
 146.136.88.26 - RC
+146.136.90.42 - Sva Host
 ```
 
 needs:

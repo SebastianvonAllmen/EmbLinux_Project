@@ -13,6 +13,6 @@ void set_client_socket(int socket);
 void sendAndLog(const char *message);
 int receive_message(char *buffer, int buffer_size);
 void close_socket();
-int connect_server(const char *server_ip);
+int connect_to_server(const char *server_ip);
 
 #endif // TCP_HELPER_H
