@@ -7,8 +7,11 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include <unistd.h> /* for sleep */
 
+#include "per_IncludeMcuLibConfig.h" /* MCU config library */
 #include "McuI2cLib.h" /* I2C library */
 #include "McuSSD1306.h" /* OLED SSD1306/SH1106 library */
 
@@ -21,19 +24,21 @@
 #include "McuFontHelv12Normal.h"
 #include "McuFontHelv18Bold.h"
 
-static void init(void) {
+int init_Display() {
   McuI2cLib_Init();
   McuSSD1306_Init();
+
+  return 0;
 }
 
-static void demoGraphics(void) {
+void demoGraphics() {
   McuGDisplaySSD1306_Clear();
   McuGDisplaySSD1306_DrawBox(0, 0, McuGDisplaySSD1306_GetWidth()-1, McuGDisplaySSD1306_GetHeight()-1, 1, McuGDisplaySSD1306_COLOR_BLUE);
   McuGDisplaySSD1306_DrawCircle(50, 30, 15, McuGDisplaySSD1306_COLOR_BLUE);
   McuGDisplaySSD1306_UpdateFull();
 }
 
-static void demoText(void) {
+void demoText() {
   McuSSD1306_Clear();
   McuSSD1306_PrintString(0, 0, (uint8_t*)"Hello\nWorld!");
   McuSSD1306_PrintString(3, 15, (uint8_t*)"The quick brown fox");
@@ -41,7 +46,7 @@ static void demoText(void) {
   McuSSD1306_PrintString(5, 15, (uint8_t*)"the lazy dog");
 }
 
-static void demoFont(void) {
+void demoFont() {
   PGFONT_Callbacks font = McuFontHelv12Normal_GetFont();
   McuFontDisplay_PixelDim x, y;
   int color = McuGDisplaySSD1306_COLOR_BLUE;
@@ -52,14 +57,14 @@ static void demoFont(void) {
   McuGDisplaySSD1306_UpdateFull();
 }
 
-int main(void) {
-  printf("OLED example in C\n");
-  init();
-  demoText();
-  sleep(2);
-  demoGraphics();
-  sleep(2);
-  demoFont();
-  return 0;
-}
+//int main(void) {
+//  printf("OLED example in C\n");
+//  init();
+//  demoText();
+//  sleep(2);
+//  demoGraphics();
+//  sleep(2);
+//  demoFont();
+//  return 0;
+//}
 

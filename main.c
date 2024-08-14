@@ -4,10 +4,12 @@
 #include "gpio_control.h"
 #include "tcp_helper.h"
 #include "step_init.h"
+#include "per_display.h"
 
 #define BUFFER_SIZE 1024
 
 int main(int argc, char *argv[]) {
+
     char client_message[BUFFER_SIZE];
     int read_size;
     
@@ -15,6 +17,13 @@ int main(int argc, char *argv[]) {
     if (ret_val != 0) {
         return 1;
     }
+
+    printf("OLED example in C\n");
+    demoText();
+    sleep(2);
+    demoGraphics();
+    sleep(2);
+    demoFont();
 
     // Accept incoming connection
     puts("Waiting for incoming connections...");

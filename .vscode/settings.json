@@ -1,6 +1,15 @@
 {
     "files.associations": {
         "unistd.h": "c",
-        "gpio_control.h": "c"
+        "gpio_control.h": "c",
+        "tcp_helper.h": "c",
+        "mcufonthelv12normal.h": "c",
+        "mcufonthelv18bold.h": "c",
+        "mcussd1306.h": "c",
+        "mcui2clib.h": "c",
+        "per_includemculibconfig.h": "c",
+        "mcugdisplayssd1306.h": "c",
+        "mcufontdisplay.h": "c",
+        "mcufonthelv10normal.h": "c"
     }
 }

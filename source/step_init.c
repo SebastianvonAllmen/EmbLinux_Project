@@ -1,6 +1,7 @@
 #include "step_init.h"
 #include "tcp_helper.h"
 #include "gpio_control.h"
+#include "per_display.h"
 
 
 int init() {
@@ -11,6 +12,11 @@ int init() {
     }
 
     ret_val = initialize_gpio();
+    if (ret_val != 0) {
+        return 1;
+    }
+
+    ret_val = init_Display();
     if (ret_val != 0) {
         return 1;
     }
