@@ -3,6 +3,7 @@
 #include <unistd.h>    // For close
 #include "gpio_control.h"
 #include "tcp_helper.h"
+#include "step_init.h"
 
 #define BUFFER_SIZE 1024
 
@@ -10,27 +11,15 @@ int main(int argc, char *argv[]) {
     char client_message[BUFFER_SIZE];
     int read_size;
     
-    // Initialize TCP and start listening on port 8888
-    int ret_val = initialize_tcp(8888);
-    if (ret_val < 0) {
-        return 1;
-    }
-
-    // GPIO Setup
-    struct gpiod_chip *chip = setup_gpio_chip("gpiochip0");
-    if (!chip) {
-        return 1;
-    }
-    struct gpiod_line *line = setup_gpio_line(chip, 21);
-    if (!line) {
-        close_gpio(chip, line);
+    int ret_val = init();
+    if (ret_val != 0) {
         return 1;
     }
 
     // Accept incoming connection
     puts("Waiting for incoming connections...");
     if (accept_connection() < 0) {
-        close_gpio(chip, line);
+        close_gpio();
         return 1;
     }
 
@@ -38,13 +27,13 @@ int main(int argc, char *argv[]) {
     sendToClientAndLog("Controll LED by writing: on, off");
 
     // Communicate with the client
-    while ((read_size = receive_message(client_message, BUFFER_SIZE)) > 0) {
+    while ((read_size = receive_message(client_message, BUFFER_SIZE)) > 1) {
         // Check the received message and act accordingly
         if (strncmp(client_message, "on", 2) == 0) {
-            set_gpio_value(line, 1); // Turn the LED on
+            set_gpio_value(1); // Turn the LED on
             sendToClientAndLog("LED turned on");
         } else if (strncmp(client_message, "off", 3) == 0) {
-            set_gpio_value(line, 0); // Turn the LED off
+            set_gpio_value(0); // Turn the LED off
             sendToClientAndLog("LED turned off");
         } else {
             sendToClientAndLog("Invalid command");
@@ -58,7 +47,7 @@ int main(int argc, char *argv[]) {
     close_client_socket();
 
     // Release GPIO line and close chip
-    close_gpio(chip, line);
+    close_gpio();
 
     return 0;
 }
