@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     sendToClientAndLog("Controll LED by writing: on, off");
 
     // Communicate with the client
-    while ((read_size = receive_message(client_message, BUFFER_SIZE)) > 0) {
+    while ((read_size = receive_message(client_message, BUFFER_SIZE)) > 1) {
         // Check the received message and act accordingly
         if (strncmp(client_message, "on", 2) == 0) {
             set_gpio_value(line, 1); // Turn the LED on
