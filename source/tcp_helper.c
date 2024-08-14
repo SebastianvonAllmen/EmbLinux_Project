@@ -30,7 +30,7 @@ int initialize_tcp(int port) {
         return -1;
     }
 
-    return socket_desc;
+    return 0;
 }
 
 int accept_connection() {
@@ -42,7 +42,7 @@ int accept_connection() {
         perror("Accept failed");
         return -1;
     }
-    return client_socket;
+    return 0;
 }
 
 
