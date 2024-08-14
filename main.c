@@ -4,6 +4,7 @@
 #include "gpio_control.h"
 #include "tcp_helper.h"
 #include "step_init.h"
+#include "step_idle.h"
 
 #define BUFFER_SIZE 1024
 
@@ -16,18 +17,15 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // Accept incoming connection
-    puts("Waiting for incoming connections...");
-    if (accept_connection() < 0) {
-        close_gpio();
-        return 1;
+    if (true) { // TODO, figure out when to search and when to 
+        ret_val = idle();
+        if (ret_val != 0) {
+            return 1;
+        }
     }
 
-    puts("Connection accepted");
-    sendToClientAndLog("Controll LED by writing: on, off");
-
     // Communicate with the client
-    while ((read_size = receive_message(client_message, BUFFER_SIZE)) > 1) {
+    while ((read_size = receive_message(client_message, BUFFER_SIZE)) > 0) {
         // Check the received message and act accordingly
         if (strncmp(client_message, "on", 2) == 0) {
             set_gpio_value(1); // Turn the LED on
