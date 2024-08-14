@@ -33,7 +33,7 @@
 #endif
 
 #if McuWait_CONFIG_USE_CYCLE_COUNTER
-  // #include "McuArmTools.h" /* include Cortex utility functions */
+  #include "McuArmTools.h" /* include Cortex utility functions */
 #endif
 
 #endif /* __McuWait_CONFIG_H */

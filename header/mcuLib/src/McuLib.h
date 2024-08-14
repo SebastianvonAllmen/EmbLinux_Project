@@ -65,14 +65,14 @@ extern "C" {
 #endif
 
 #if McuLib_CONFIG_SDK_VERSION_USED == McuLib_CONFIG_SDK_PROCESSOR_EXPERT
-  /*#ifndef __IASMARM__ /* not including standard header files if using IAR assembler */
-  // Include shared modules, which are used for whole project */
-  //  #include "PE_Types.h"
-  //  #include "PE_Error.h"
-  //  #include "PE_Const.h"
-  //  #include "IO_Map.h"
-  //  #include "Cpu.h" /* include CPU related interfaces and defines */
-  //#endif
+  #ifndef __IASMARM__ /* not including standard header files if using IAR assembler */
+  /* Include shared modules, which are used for whole project */
+    #include "PE_Types.h"
+    #include "PE_Error.h"
+    #include "PE_Const.h"
+    #include "IO_Map.h"
+    #include "Cpu.h" /* include CPU related interfaces and defines */
+  #endif
 #else /* use non-Processor Expert SDK: generic or silicon vendor SDK */
   /* defines of common types used by Processor Expert, which might not be provided by the SDK */
   #if !(defined(__ICCARM__) || defined(__HIWARE__)) /* Hiware compiler (S08, S12) only supports C89 */

@@ -280,11 +280,11 @@
 #if McuLib_CONFIG_SDK_USE_FREERTOS
 
 #if McuLib_CONFIG_CPU_IS_ESP32
-  //#include "freertos/FreeRTOSConfig.h"
+  #include "freertos/FreeRTOSConfig.h"
 #else
-  //#include "FreeRTOSConfig.h"
+  #include "FreeRTOSConfig.h"
 #endif
-//#include "McuRTOSconfig.h" /* configuration file for component */
+#include "McuRTOSconfig.h" /* configuration file for component */
 
 #if configUSE_SHELL
   #include "McuShell.h"
@@ -299,12 +299,12 @@
   #include "freertos/timers.h"         /* timer module API */
   #include "freertos/stream_buffer.h"  /* stream buffer module API */
 #else
-  //#include "FreeRTOS.h"
-  //#include "task.h"                    /* task API */
-  //#include "semphr.h"                  /* semaphore API */
-  //#include "event_groups.h"            /* event group API */
-  //#include "timers.h"                  /* timer module API */
-  //#include "stream_buffer.h"           /* stream buffer module API */
+  #include "FreeRTOS.h"
+  #include "task.h"                    /* task API */
+  #include "semphr.h"                  /* semaphore API */
+  #include "event_groups.h"            /* event group API */
+  #include "timers.h"                  /* timer module API */
+  #include "stream_buffer.h"           /* stream buffer module API */
 #endif
 #include <stddef.h>                    /* for size_t type */
 

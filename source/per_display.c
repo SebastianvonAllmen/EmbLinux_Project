@@ -11,7 +11,7 @@
 #include <stdbool.h>
 #include <unistd.h> /* for sleep */
 
-#include "per_IncludeMcuLibConfig.h" /* MCU config library */
+//#include "per_IncludeMcuLibConfig.h" /* MCU config library */
 #include "McuI2cLib.h" /* I2C library */
 #include "McuSSD1306.h" /* OLED SSD1306/SH1106 library */
 
