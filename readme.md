@@ -13,6 +13,12 @@ call port
 nc 146.136.88.38 8888
 ```
 
+device ip for mvp
+````
+146.136.88.38 - SvA
+146.136.88.26 - RC
+```
+
 needs:
 ```
 sudo apt install gpiod
