@@ -10,8 +10,7 @@ int idle() {
         return 1;
     }
 
-    puts("Connection accepted");
-    sendToClientAndLog("Give me your response, waiting for Opponents response");
+    sendAndLog("Hello Client, I am ready to play!");
     
     return 0;
 }

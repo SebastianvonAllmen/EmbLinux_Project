@@ -11,9 +11,6 @@
 #define BUFFER_SIZE 1024
 
 int main(int argc, char *argv[]) {
-    char client_message[BUFFER_SIZE];
-    int read_size;
-
     // Check if the correct number of arguments is provided
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <server|client> [server_ip]\n", argv[0]);
@@ -25,34 +22,35 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    if (true) { // TODO, figure out when to search and when to wait for a incomming connection
+    if (strcmp(argv[1], "server") == 0) { 
+        // Server mode
         ret_val = idle();
         if (ret_val != 0) {
             return 1;
         }
-    } else {
-        ret_val = search();
-        if (ret_val != 0) {
+    } else if (strcmp(argv[1], "client") == 0) {
+        // Client mode
+        if (argc < 3) {
+            fprintf(stderr, "Usage: %s client <server_ip>\n", argv[0]);
+            stop();
             return 1;
         }
-    }
 
-    // Communicate with the client
-    while ((read_size = receive_message(client_message, BUFFER_SIZE)) > 0) {
-        // Check the received message and act accordingly
-        if (strncmp(client_message, "on", 2) == 0) {
-            set_gpio_value(1); // Turn the LED on
-            sendToClientAndLog("LED turned on");
-        } else if (strncmp(client_message, "off", 3) == 0) {
-            set_gpio_value(0); // Turn the LED off
-            sendToClientAndLog("LED turned off");
-        } else {
-            sendToClientAndLog("Invalid command");
+        // Extract the server IP from the second argument
+        const char *server_ip = argv[2];
+
+        ret_val = search(server_ip);
+        if (ret_val != 0) {
+            stop();
+            return 1;
         }
-
-        // Clear the message buffer
-        memset(client_message, 0, BUFFER_SIZE);
+    } else {
+        fprintf(stderr, "Invalid mode: %s. Use 'server' or 'client'.\n", argv[1]);
+        stop();
+        return 1;
     }
+
+    // GAMELOOP
 
     stop();
 

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
-static int client_socket = -1;
+static int gen_socket = -1;
 static int socket_desc = -1;
 
 int initialize_tcp(int port) {
@@ -37,8 +37,8 @@ int accept_connection() {
     struct sockaddr_in client;
     socklen_t c = sizeof(struct sockaddr_in);
 
-    client_socket = accept(socket_desc, (struct sockaddr *)&client, &c);
-    if (client_socket < 0) {
+    gen_socket = accept(socket_desc, (struct sockaddr *)&client, &c);
+    if (gen_socket < 0) {
         perror("Accept failed");
         return -1;
     }
@@ -46,9 +46,9 @@ int accept_connection() {
 }
 
 
-void sendToClientAndLog(const char *message) {
-    if (client_socket == -1) {
-        puts("No client socket set");
+void sendAndLog(const char *message) {
+    if (gen_socket == -1) {
+        puts("No socket set");
         return;
     }
 
@@ -56,17 +56,17 @@ void sendToClientAndLog(const char *message) {
     puts(message);
 
     // Send the message to the client
-    write(client_socket, message, strlen(message));
-    write(client_socket, "\n", 1);  // Ensure newline is sent after the message
+    write(gen_socket, message, strlen(message));
+    write(gen_socket, "\n", 1);  // Ensure newline is sent after the message
 }
 
 int receive_message(char *buffer, int buffer_size) {
-    if (client_socket == -1) {
-        puts("No client socket set");
+    if (gen_socket == -1) {
+        puts("No socket set");
         return -1;
     }
 
-    int read_size = recv(client_socket, buffer, buffer_size, 0);
+    int read_size = recv(gen_socket, buffer, buffer_size, 0);
     if (read_size > 0) {
         buffer[read_size] = '\0';  // Null-terminate the received string
     } else if (read_size == 0) {
@@ -77,9 +77,28 @@ int receive_message(char *buffer, int buffer_size) {
     return read_size;
 }
 
-void close_client_socket() {
-    if (client_socket != -1) {
-        close(client_socket);
-        client_socket = -1;
+void close_socket() {
+    if (gen_socket != -1) {
+        close(gen_socket);
+        gen_socket = -1;
     }
+}
+
+int connect_server(const char *server_ip) {
+    // Create Server config
+    struct sockaddr_in server;
+
+    // Prepare the sockaddr_in structure
+    server.sin_addr.s_addr = inet_addr(server_ip);
+    server.sin_family = AF_INET;
+    server.sin_port = htons(8888); 
+
+    // Connect to the server
+    if (connect(socket_desc, (struct sockaddr *)&server, sizeof(server)) < 0) {
+        perror("Connection failed");
+        close(socket_desc);
+        return 1;
+    }
+
+    return 0;
 }

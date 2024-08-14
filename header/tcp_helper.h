@@ -10,8 +10,9 @@
 int initialize_tcp(int port);
 int accept_connection();
 void set_client_socket(int socket);
-void sendToClientAndLog(const char *message);
+void sendAndLog(const char *message);
 int receive_message(char *buffer, int buffer_size);
-void close_client_socket();
+void close_socket();
+int connect_server(const char *server_ip);
 
 #endif // TCP_HELPER_H

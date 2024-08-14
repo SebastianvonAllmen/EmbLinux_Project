@@ -4,7 +4,7 @@
 
 int stop() {
     // Close the client socket
-    close_client_socket();
+    close_socket();
 
     // Release GPIO line and close chip
     close_gpio();
