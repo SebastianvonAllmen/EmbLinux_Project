@@ -5,20 +5,33 @@
 #include "tcp_helper.h"
 #include "step_init.h"
 #include "step_idle.h"
+#include "step_search.h"
+#include "step_stop.h"
 
 #define BUFFER_SIZE 1024
 
 int main(int argc, char *argv[]) {
     char client_message[BUFFER_SIZE];
     int read_size;
+
+    // Check if the correct number of arguments is provided
+    if (argc < 2) {
+        fprintf(stderr, "Usage: %s <server|client> [server_ip]\n", argv[0]);
+        return 1;
+    }
     
     int ret_val = init();
     if (ret_val != 0) {
         return 1;
     }
 
-    if (true) { // TODO, figure out when to search and when to 
+    if (true) { // TODO, figure out when to search and when to wait for a incomming connection
         ret_val = idle();
+        if (ret_val != 0) {
+            return 1;
+        }
+    } else {
+        ret_val = search();
         if (ret_val != 0) {
             return 1;
         }
@@ -41,11 +54,7 @@ int main(int argc, char *argv[]) {
         memset(client_message, 0, BUFFER_SIZE);
     }
 
-    // Close the client socket
-    close_client_socket();
-
-    // Release GPIO line and close chip
-    close_gpio();
+    stop();
 
     return 0;
 }
