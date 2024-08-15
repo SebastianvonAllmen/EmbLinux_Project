@@ -35,19 +35,21 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
         }
     }
 
-    ret_val = chooseStep(is_server);
-    if (ret_val != 0) {
-        return 1;
-    }
+    for (int i = 0; i < 1; i++) {
+        ret_val = chooseStep(is_server);
+        if (ret_val != 0) {
+            return 1;
+        }
 
-    ret_val = resultStep();
-    if (ret_val != 0) {
-        return 1;
-    }
+        ret_val = resultStep();
+        if (ret_val != 0) {
+            return 1;
+        }
 
-    ret_val = stopStep();
-    if (ret_val != 0) {
-        return 1;
+        ret_val = stopStep();
+        if (ret_val != 0) {
+            return 1;
+        }
     }
 
     return 0;
@@ -235,6 +237,8 @@ int resultStep() {
     } else {
         printf("You lose! %s beats %s.\n", enumChoiceToString(opponents_choice), enumChoiceToString(own_choice));
     }
+
+    puts("\n");
 
     return 0;
 }
