@@ -42,6 +42,8 @@ int accept_connection() {
         perror("Accept failed");
         return -1;
     }
+
+    puts("Client successfully initialized connection");
     return 0;
 }
 
@@ -106,6 +108,8 @@ int connect_to_server(const char *server_ip) {
         close(client_socket);
         return -1;
     }
+
+    puts("Successfully connected to Server");
 
     // Store the connected socket descriptor in gen_socket if needed
     gen_socket = client_socket;

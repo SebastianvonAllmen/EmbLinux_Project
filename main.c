@@ -17,7 +17,6 @@ int main(int argc, char *argv[]) {
     if (strcmp(argv[1], "server") == 0) { 
         return startSteps(true, NULL);
     } else if (strcmp(argv[1], "client") == 0) {
-        // Client mode
         if (argc < 3) {
             fprintf(stderr, "Usage: %s client <server_ip>\n", argv[0]);
             return 1;

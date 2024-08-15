@@ -76,10 +76,29 @@ int searchStep(const char *server_ip) {
         return 1;
     }  
 
-    sendAndLog("Hello Server, i am ready to play!");
+    sendAndLog("Hello Server, I am ready to play!");
+
+    // Buffer to store the response from the server
+    char response[256];
+    
+    // Wait for a response from the server
+    int ret_val = receive_message(response, sizeof(response));
+    if (ret_val < 0) {
+        puts("Error: Failed to receive message from server.");
+        return 1;
+    }
+
+    // TODO change this to a define or something
+    if (strcmp(response, "Hello Client, I am ready to play!") == 0) {
+        puts("Received acknowledgment from server.");
+    } else {
+        puts("Unexpected response from server.");
+        return 1;
+    }
 
     return 0;
 }
+
 
 int chooseStep(bool is_server) {
     // TODO start the background thread in which to potentially receive opponent choice
