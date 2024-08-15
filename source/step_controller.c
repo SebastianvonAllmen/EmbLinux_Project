@@ -85,7 +85,7 @@ int idleStep() {
 
     // TODO change this to a define or something
     if (strcmp(response, "Hello Server, I am ready to play!\n") == 0) {
-        puts("Received acknowledgment from client.");
+        puts("Received acknowledgment from client.\n");
     } else {
         puts("Unexpected response from client");
         return 1;
@@ -115,7 +115,7 @@ int searchStep(const char *server_ip) {
 
     // TODO change this to a define or something
     if (strcmp(response, "Hello Client, I am ready to play!\n") == 0) {
-        puts("Received acknowledgment from server.");
+        puts("Received acknowledgment from server.\n");
     } else {
         puts("Unexpected response from server.");
         return 1;
@@ -213,6 +213,7 @@ const char* enumChoiceToString(Choice choice) {
 }
 
 int resultStep() {
+    puts("\n");
     // TODO potentially add nullcheck
     if (opponents_choice == own_choice) {
         printf("It's a draw! Both chose %s.\n", enumChoiceToString(own_choice));
