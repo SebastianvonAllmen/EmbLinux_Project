@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/EmbLinux_Project",
-            "args": ["client", "146.136.88.26"],
+            "args": ["client", "146.136.90.42"],
             "stopAtEntry": true,
             "cwd": "${fileDirname}",
             "environment": [],
