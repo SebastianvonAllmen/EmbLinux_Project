@@ -63,11 +63,29 @@ int idleStep() {
     // Accept incoming connection
     puts("Waiting for incoming connections...");
     if (accept_connection() < 0) {
-        close_gpio();
         return 1;
     }
 
     sendAndLog("Hello Client, I am ready to play!", true);
+
+    // Buffer to store the response from the server
+    char response[256];
+    
+    // Wait for a response from the server
+    int ret_val = receive_message(response, sizeof(response));
+    if (ret_val < 0) {
+        puts("Error: Failed to receive message from client.");
+        return 1;
+    }
+
+    // TODO change this to a define or something
+    if (strcmp(response, "Hello Server, I am ready to play!\n") == 0) {
+        puts("Received acknowledgment from client.");
+    } else {
+        puts("Unexpected response from client");
+        return 1;
+    }
+
     
     return 0;
 }
@@ -91,7 +109,7 @@ int searchStep(const char *server_ip) {
     }
 
     // TODO change this to a define or something
-    if (strcmp(response, "Hello Client, I am ready to play!") == 0) {
+    if (strcmp(response, "Hello Client, I am ready to play!\n") == 0) {
         puts("Received acknowledgment from server.");
     } else {
         puts("Unexpected response from server.");
@@ -103,6 +121,8 @@ int searchStep(const char *server_ip) {
 
 int chooseStep(bool is_server) {
     pthread_t response_thread;
+
+    puts("Starting Game: Rock, Paper, Scissors");
 
     // Start the background thread to wait for a potential response
     if (pthread_create(&response_thread, NULL, waitForResponse, NULL) != 0) {
@@ -140,8 +160,8 @@ void* waitForResponse(void* arg) {
 
     // Validate and set the opponent's choice
     if (received_choice >= ROCK && received_choice <= SCISSORS) {
-        setOpChoice((Choice)received_choice);
         logChoice("Opponent's choice received:", (Choice)received_choice);
+        setOpChoice((Choice)received_choice);
     } else {
         puts("Unexpected response from opponent.");
     }
