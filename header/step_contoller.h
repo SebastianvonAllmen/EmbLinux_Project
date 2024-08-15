@@ -17,6 +17,7 @@ int initStep();
 int idleStep();
 int searchStep(const char* ipAdress);
 int chooseStep(bool is_server);
+Choice getRandomChoice();
 void* waitForResponse(void* arg);
 void setOwnChoice(Choice choice);
 void setOpChoice(Choice choice);

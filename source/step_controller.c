@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "step_contoller.h"
 #include "tcp_helper.h"
@@ -137,17 +138,23 @@ int chooseStep(bool is_server) {
 
     // Simulate player choice
     if (is_server) {
-        sleep(2);
-        setOwnChoice(ROCK);
+        sleep(1);
+        setOwnChoice(getRandomChoice());
     } else {
-        sleep(4);
-        setOwnChoice(PAPER);
+        sleep(2);
+        setOwnChoice(getRandomChoice());
     }
 
     // Wait for the opponents response
     pthread_join(response_thread, NULL);
 
     return 0;
+}
+
+Choice getRandomChoice() {
+    srand(time(NULL)); // since using time should be different everytime we run the programm
+
+    return (Choice)(rand() % 3);
 }
 
 void* waitForResponse(void* arg) {
@@ -230,7 +237,7 @@ int resultStep() {
 
 
 int stopStep() {
-    puts("Hope you enjoyed playing!!\n");
+    puts("Hope you enjoyed playing!!");
     puts("Closing Applicaiton\n");
 
     // Close the client socket
