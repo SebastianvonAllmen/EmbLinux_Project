@@ -9,11 +9,7 @@ include_directories(header)
 add_executable(EmbLinux_Project main.c 
     source/gpio_control.c 
     source/tcp_helper.c 
-    source/step_init.c 
-    source/step_idle.c 
-    source/step_search.c 
-    source/step_choose.c
-    source/step_stop.c
+    source/step_controller.c
 )
 
 target_link_libraries(EmbLinux_Project ${GPIOD_LIBRARIES})
