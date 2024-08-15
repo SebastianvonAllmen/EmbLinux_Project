@@ -70,15 +70,36 @@ int receive_message(char *buffer, int buffer_size) {
         return -1;
     }
 
-    int read_size = recv(gen_socket, buffer, buffer_size, 0);
-    if (read_size > 0) {
-        buffer[read_size] = '\0';  // Null-terminate the received string
-    } else if (read_size == 0) {
-        puts("Client disconnected");
-    } else if (read_size == -1) {
-        perror("recv failed");
-    }
-    return read_size;
+    int read_size = 0;
+    do {
+        read_size = recv(gen_socket, buffer, buffer_size - 1, 0); // buffer_size - 1 to leave space for null-terminator
+        if (read_size > 0) {
+            buffer[read_size] = '\0';  // Null-terminate the received string
+
+            // Trim whitespace and check if the message is empty or just a newline
+            char *ptr = buffer;
+            while (*ptr == ' ' || *ptr == '\n' || *ptr == '\r') {
+                ptr++;
+            }
+
+            if (*ptr != '\0') {
+                // A valid message was received
+                return read_size;
+            } else {
+                // Received an empty message or just whitespace, continue waiting
+                puts("Received empty message or newline, waiting for valid message...");
+            }
+        } else if (read_size == 0) {
+            puts("Client disconnected");
+            return 0;
+        } else if (read_size == -1) {
+            perror("recv failed");
+            return -1;
+        }
+    } while (1);
+
+    // In case of unexpected exit from loop (shouldn't happen)
+    return -1;
 }
 
 void close_socket() {
