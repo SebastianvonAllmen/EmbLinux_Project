@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "step_contoller.h"
 #include "tcp_helper.h"
 #include "gpio_control.h"
 
 bool is_server = false;
-char* server_ip;
+const char* server_ip;
+Choice own_choice, opponents_choice;
 
 int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
     is_server = cmd_is_server;
@@ -65,7 +67,7 @@ int idleStep() {
         return 1;
     }
 
-    sendAndLog("Hello Client, I am ready to play!");
+    sendAndLog("Hello Client, I am ready to play!", true);
     
     return 0;
 }
@@ -76,7 +78,7 @@ int searchStep(const char *server_ip) {
         return 1;
     }  
 
-    sendAndLog("Hello Server, I am ready to play!");
+    sendAndLog("Hello Server, I am ready to play!", true);
 
     // Buffer to store the response from the server
     char response[256];
@@ -99,20 +101,93 @@ int searchStep(const char *server_ip) {
     return 0;
 }
 
-
 int chooseStep(bool is_server) {
-    // TODO start the background thread in which to potentially receive opponent choice
+    pthread_t response_thread;
+
+    // Start the background thread to wait for a potential response
+    if (pthread_create(&response_thread, NULL, waitForResponse, NULL) != 0) {
+        puts("Error: Failed to create thread.");
+        return 1;
+    }
 
     // Simulate player choice
     if (is_server) {
         sleep(2);
-        sendAndLog("1");
+        setOwnChoice(ROCK);
     } else {
         sleep(4);
-        sendAndLog("4");
+        setOwnChoice(PAPER);
     }
+
+    // Wait for the opponents response
+    pthread_join(response_thread, NULL);
+
+    return 0;
 }
 
+void* waitForResponse(void* arg) {
+    char response[256];
+
+    // Wait for a response from the other player
+    int ret_val = receive_message(response, sizeof(response));
+    if (ret_val < 0) {
+        puts("Error: Failed to receive message from opponent.");
+        pthread_exit(NULL);
+    }
+
+    // Convert the received string to an integer (enum)
+    int received_choice = atoi(response);
+
+    // Validate and set the opponent's choice
+    if (received_choice >= ROCK && received_choice <= SCISSORS) {
+        setOpChoice((Choice)received_choice);
+        logChoice("Opponent's choice received:", (Choice)received_choice);
+    } else {
+        puts("Unexpected response from opponent.");
+    }
+
+    pthread_exit(NULL);
+}
+
+void setOwnChoice(Choice choice) {
+    own_choice = choice;
+
+    logChoice("Own choice set to", choice);
+
+    // Send the enum value as an integer
+    char message[10];
+    snprintf(message, sizeof(message), "%d", choice); // Convert enum to string
+    sendAndLog(message, false);
+}
+
+
+void setOpChoice(Choice choice) {
+    opponents_choice = choice;
+
+    logChoice("Opponent's choice set to", choice);
+}
+
+void logChoice(char* message, Choice choice) {
+    char choice_str[10]; // Buffer to hold the choice as a string
+
+    switch (choice) {
+        case ROCK:
+            strcpy(choice_str, "Rock");
+            break;
+        case PAPER:
+            strcpy(choice_str, "Paper");
+            break;
+        case SCISSORS:
+            strcpy(choice_str, "Scissors");
+            break;
+        default:
+            strcpy(choice_str, "Unknown");
+            break;
+    }
+
+    // Logging the message and choice
+    printf("%s: %s\n", message, choice_str);
+}
 
 int stopStep() {
     // Close the client socket
@@ -120,4 +195,6 @@ int stopStep() {
 
     // Release GPIO line and close chip
     close_gpio();
+
+    return 0;
 }

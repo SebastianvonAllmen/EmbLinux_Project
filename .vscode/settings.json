@@ -2,6 +2,7 @@
     "files.associations": {
         "unistd.h": "c",
         "gpio_control.h": "c",
-        "step_idle.h": "c"
+        "step_idle.h": "c",
+        "tcp_helper.h": "c"
     }
 }

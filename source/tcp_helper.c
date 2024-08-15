@@ -48,14 +48,16 @@ int accept_connection() {
 }
 
 
-void sendAndLog(const char *message) {
+void sendAndLog(const char *message, bool do_log) {
     if (gen_socket == -1) {
         puts("No socket set");
         return;
     }
 
     // Log the message to the console
-    puts(message);
+    if (do_log) {
+        puts(message);
+    }
 
     // Send the message to the client
     write(gen_socket, message, strlen(message));

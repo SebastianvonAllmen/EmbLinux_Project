@@ -3,6 +3,7 @@
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <stdbool.h>
 
 #define BUFFER_SIZE 1024
 
@@ -10,7 +11,7 @@
 int initialize_tcp(int port);
 int accept_connection();
 void set_client_socket(int socket);
-void sendAndLog(const char *message);
+void sendAndLog(const char *message, bool do_log);
 int receive_message(char *buffer, int buffer_size);
 void close_socket();
 int connect_to_server(const char *server_ip);
