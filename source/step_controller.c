@@ -233,7 +233,7 @@ int resultStep() {
 
 
 int stopStep() {
-    puts("Hope you enjoyed playing!!\n");
+    puts("Hope you enjoyed playing!!");
     puts("Closing Applicaiton\n");
 
     // Close the client socket
