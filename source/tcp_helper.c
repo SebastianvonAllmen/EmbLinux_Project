@@ -47,22 +47,21 @@ int accept_connection() {
     return 0;
 }
 
-
 void sendAndLog(const char *message, bool do_log) {
     if (gen_socket == -1) {
         puts("No socket set");
         return;
     }
 
-    // Log the message to the console
     if (do_log) {
         puts(message);
     }
 
-    // Send the message to the client
-    write(gen_socket, message, strlen(message));
-    write(gen_socket, "\n", 1);  // Ensure newline is sent after the message
+    char buffer[1024]; 
+    snprintf(buffer, sizeof(buffer), "%s\n", message);
+    write(gen_socket, buffer, strlen(buffer));
 }
+
 
 int receive_message(char *buffer, int buffer_size) {
     if (gen_socket == -1) {
