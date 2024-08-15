@@ -34,11 +34,20 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
         }
     }
 
-    chooseStep(is_server);
+    ret_val = chooseStep(is_server);
+    if (ret_val != 0) {
+        return 1;
+    }
 
-    //waitStep();
+    ret_val = resultStep();
+    if (ret_val != 0) {
+        return 1;
+    }
 
-    stopStep();
+    ret_val = stopStep();
+    if (ret_val != 0) {
+        return 1;
+    }
 
     return 0;
 }
@@ -188,28 +197,45 @@ void setOpChoice(Choice choice) {
 }
 
 void logChoice(char* message, Choice choice) {
-    char choice_str[10]; // Buffer to hold the choice as a string
-
-    switch (choice) {
-        case ROCK:
-            strcpy(choice_str, "Rock");
-            break;
-        case PAPER:
-            strcpy(choice_str, "Paper");
-            break;
-        case SCISSORS:
-            strcpy(choice_str, "Scissors");
-            break;
-        default:
-            strcpy(choice_str, "Unknown");
-            break;
-    }
+    const char* choice_str = enumChoiceToString(choice);
 
     // Logging the message and choice
     printf("%s: %s\n", message, choice_str);
 }
 
+const char* enumChoiceToString(Choice choice) {
+    switch (choice) {
+        case ROCK:
+            return "Rock";
+        case PAPER:
+            return "Paper";
+        case SCISSORS:
+            return "Scissors";
+        default:
+            return "Unknown";
+    }
+}
+
+int resultStep() {
+    // TODO potentially add nullcheck
+    if (opponents_choice == own_choice) {
+        printf("It's a draw! Both chose %s.\n", enumChoiceToString(own_choice));
+    } else if ((own_choice == ROCK && opponents_choice == SCISSORS) ||
+               (own_choice == PAPER && opponents_choice == ROCK) ||
+               (own_choice == SCISSORS && opponents_choice == PAPER)) {
+        printf("You win! %s beats %s.\n", enumChoiceToString(own_choice), enumChoiceToString(opponents_choice));
+    } else {
+        printf("You lose! %s beats %s.\n", enumChoiceToString(opponents_choice), enumChoiceToString(own_choice));
+    }
+
+    return 0;
+}
+
+
 int stopStep() {
+    puts("Hope you enjoyed playing!!\n");
+    puts("Closing Applicaiton\n");
+
     // Close the client socket
     close_socket();
 

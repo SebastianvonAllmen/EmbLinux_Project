@@ -21,6 +21,8 @@ void* waitForResponse(void* arg);
 void setOwnChoice(Choice choice);
 void setOpChoice(Choice choice);
 void logChoice(char* message, Choice choice);
+const char* enumChoiceToString(Choice choice);
+int resultStep();
 int stopStep();
 
 #endif // STEP_CONTROLLER_H
