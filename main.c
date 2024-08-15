@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>    // For close
-#include "gpio_control.h"
 #include "tcp_helper.h"
 #include "step_contoller.h"
 

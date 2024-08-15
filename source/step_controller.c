@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "step_contoller.h"
 #include "tcp_helper.h"
-#include "gpio_control.h"
 
 bool is_server = false;
 const char* server_ip;
@@ -50,10 +50,6 @@ int initStep() {
         return 1;
     }
 
-    ret_val = initialize_gpio();
-    if (ret_val != 0) {
-        return 1;
-    }
     
 
     return 0;
@@ -63,7 +59,6 @@ int idleStep() {
     // Accept incoming connection
     puts("Waiting for incoming connections...");
     if (accept_connection() < 0) {
-        close_gpio();
         return 1;
     }
 
@@ -192,9 +187,6 @@ void logChoice(char* message, Choice choice) {
 int stopStep() {
     // Close the client socket
     close_socket();
-
-    // Release GPIO line and close chip
-    close_gpio();
 
     return 0;
 }
