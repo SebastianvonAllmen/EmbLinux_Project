@@ -40,7 +40,7 @@ sudo apt-get install libmicrohttpd-dev
 1. **Create the Build Directory** (if not already present):
 
     ```bash
-    mkdir build
+    mkdir build && mkdir log
     cd build
     ```
 
