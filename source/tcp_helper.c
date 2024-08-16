@@ -5,8 +5,9 @@
 
 static int gen_socket = -1;
 static int socket_desc = -1;
+static int port = 8888;
 
-int initialize_tcp(int port) {
+int initialize_tcp(int port_arg) {
     struct sockaddr_in server;
 
     socket_desc = socket(AF_INET, SOCK_STREAM, 0);
@@ -122,7 +123,7 @@ int connect_to_server(const char *server_ip) {
     // Prepare the sockaddr_in structure
     server.sin_addr.s_addr = inet_addr(server_ip);
     server.sin_family = AF_INET;
-    server.sin_port = htons(8888); 
+    server.sin_port = htons(port); 
 
     // Connect to the server
     if (connect(client_socket, (struct sockaddr *)&server, sizeof(server)) < 0) {

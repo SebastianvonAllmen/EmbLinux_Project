@@ -8,7 +8,7 @@
 #define BUFFER_SIZE 1024
 
 // Function declarations
-int initialize_tcp(int port);
+int initialize_tcp(int port_arg);
 int accept_connection();
 void set_client_socket(int socket);
 void sendAndLog(const char *message, bool do_log);

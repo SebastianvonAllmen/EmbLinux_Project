@@ -56,13 +56,11 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
 }
 
 int initStep() {
-    // Initialize TCP and start listening on port 8888
-    int ret_val = initialize_tcp(8888);
+    int ret_val = initialize_tcp(TCP_PORT);
+
     if (ret_val != 0) {
         return 1;
     }
-
-    
 
     return 0;
 }
