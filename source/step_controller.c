@@ -58,7 +58,7 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
         }
     }
 
-    for (int i = 0; i < MAXPLAYCOUNT; i++) {
+    while (play_counter < MAXPLAYCOUNT) {
         ret_val = chooseStep(is_server);
         if (ret_val != 0) {
             return ret_val;
@@ -69,7 +69,7 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
             return 1;
         }
 
-        if (i < MAXPLAYCOUNT - 1) {
+        if (play_counter < MAXPLAYCOUNT) {
             sleep(getRandomSleepTime(3));
         }
     }
