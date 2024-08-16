@@ -1,7 +1,3 @@
-Certainly! Based on the new directory structure and files you've shown, I'll adjust the README to reflect the current state of your project. I'll also include descriptions for the new files (`per_axis.c`), and I'll ensure everything is aligned with the project structure.
-
----
-
 # EmbLinux Project
 
 This project is a networked game platform running on embedded Linux devices, such as Raspberry Pi, using GPIO and I2C interfaces. The platform includes a server and client implementation for playing a game of Rock, Paper, Scissors between two devices. Additionally, a REST API is provided for accessing game results stored in a CSV file.
