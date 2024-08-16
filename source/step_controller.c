@@ -58,7 +58,7 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
         }
     }
 
-    while (play_counter < MAXPLAYCOUNT) {
+    while (play_counter <= MAXPLAYCOUNT) {
         ret_val = chooseStep(is_server);
         if (ret_val != 0) {
             return ret_val;
