@@ -290,7 +290,7 @@ int resultStep() {
         printf("You lose! %s beats %s.\n", enumChoiceToString(opponents_choice), enumChoiceToString(own_choice));
         lose_counter++;
     }
-    if (play_counter == MAXPLAYCOUNT || win_counter > MAXPLAYCOUNT / 2 ||win_counter > MAXPLAYCOUNT / 2) {
+    if (play_counter == MAXPLAYCOUNT || win_counter > MAXPLAYCOUNT / 2 ||lose_counter > MAXPLAYCOUNT / 2) {
         play_counter = MAXPLAYCOUNT;
         if (win_counter > MAXPLAYCOUNT / 2){
             sprintf(buffer, "WINNER!!! Winning %d out of %d", win_counter, MAXPLAYCOUNT);
