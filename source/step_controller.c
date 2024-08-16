@@ -6,6 +6,7 @@
 #include "step_contoller.h"
 #include "tcp_helper.h"
 #include "per_axis.h"
+#include "file_helper.h"
 
 bool is_server = false;
 const char* server_ip;
@@ -65,20 +66,17 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
 
         ret_val = resultStep();
         if (ret_val != 0) {
-            return ret_val;
+            return 1;
         }
+
         if (i < MAXPLAYCOUNT - 1) {
-            if (is_server) {
-                sleep(getRandomSleepTime(2));
-            } else {
-                sleep(getRandomSleepTime(4));
-            }
+            sleep(getRandomSleepTime(3));
         }
     }
-    
+
     ret_val = stopStep();
     if (ret_val != 0) {
-        return ret_val;
+        return 1;
     }
 
     return 0;
@@ -94,6 +92,7 @@ int initStep() {
     if (ret_val != 0) {
         return ret_val;
     }
+
     return 0;
 }
 
@@ -283,12 +282,17 @@ int resultStep() {
     puts(buffer);
     puts("\n");
     play_counter++;
+    
+    if (is_server) {
+        writeResultToFile(own_choice, opponents_choice);
+    }
+
     return 0;
 }
 
 int stopStep() {
     puts("Hope you enjoyed playing!!");
-    puts("Closing Applicaiton\n");
+    puts("Closing Applicaiton");
 
     // Close the client socket
     close_socket();
