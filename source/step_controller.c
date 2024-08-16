@@ -35,7 +35,7 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
         }
     }
 
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 2; i++) {
         ret_val = chooseStep(is_server);
         if (ret_val != 0) {
             return 1;
@@ -45,11 +45,11 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
         if (ret_val != 0) {
             return 1;
         }
+    }
 
-        ret_val = stopStep();
-        if (ret_val != 0) {
-            return 1;
-        }
+    ret_val = stopStep();
+    if (ret_val != 0) {
+        return 1;
     }
 
     return 0;
