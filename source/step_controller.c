@@ -70,7 +70,7 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
         }
 
         if (play_counter < MAXPLAYCOUNT) {
-            sleep(getRandomSleepTime(3));
+            sleep(3);
         }
     }
 
@@ -168,11 +168,17 @@ int chooseStep(bool is_server) {
 
     // Simulate player choice
     if (is_server) {
-        sleep(getRandomSleepTime(3));
+        sleep(getRandomSleepTime(5));
         setOwnChoice(getRandomChoice());
     } else {
         //clinet with accelerometer
+        printf("ROCK...");
         sleep(1);
+        printf("PAPER...");
+        sleep(1);
+        printf("SCISSORS...");
+        sleep(1);
+        printf("--SHOOT!!\n");
         setOwnChoice(read_position());
     }
 
