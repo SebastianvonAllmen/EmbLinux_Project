@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>    // For close
+#include <fcntl.h>          // Needed for open() and O_RDWR
+#include <unistd.h>         // Needed for close(), usleep(), etc.
+#include <sys/ioctl.h>      // Needed for ioctl()
+#include <linux/i2c-dev.h>  // Needed for I2C_SLAVE
 #include "gpio_control.h"
 #include "tcp_helper.h"
 #include "step_contoller.h"
-
+#include "per_axis.h"
 
 int main(int argc, char *argv[]) {
     // Check if the correct number of arguments is provided

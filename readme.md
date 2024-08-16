@@ -24,6 +24,7 @@ needs:
 ```
 sudo apt install gpiod
 sudo apt install libgpiod-dev
+sudo apt-get install libi2c-dev i2c-tools
 ```
 
 
