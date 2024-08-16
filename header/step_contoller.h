@@ -7,11 +7,13 @@
 
 #define TCP_PORT 8888
 #define REST_PORT 8000
+#define LIS3DH_ADDR 0x18   // I2C address of the LIS3DH
 
 typedef enum {
     ROCK = 0,
     PAPER = 1,
-    SCISSORS = 2
+    SCISSORS = 2,
+    FOUNTAIN = 3
 } Choice;
 
 
@@ -21,6 +23,7 @@ int idleStep();
 int searchStep(const char* ipAdress);
 int chooseStep(bool is_server);
 Choice getRandomChoice();
+Choice getRandomSleepTime(int maxTime);
 void* waitForResponse(void* arg);
 void setOwnChoice(Choice choice);
 void setOpChoice(Choice choice);

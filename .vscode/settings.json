@@ -11,6 +11,8 @@
         "ioctl.h": "c",
         "fcntl.h": "c",
         "cstdlib": "c",
-        "string.h": "c"
-}
+        "string.h": "c",
+        "type_traits": "c"
+    },
+    "C_Cpp.intelliSenseEngineFallback": "enabled"
 }

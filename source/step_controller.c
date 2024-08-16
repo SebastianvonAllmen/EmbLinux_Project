@@ -5,6 +5,8 @@
 
 #include "step_contoller.h"
 #include "tcp_helper.h"
+#include "per_axis.h"
+
 
 bool is_server = false;
 const char* server_ip;
@@ -17,38 +19,53 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
     int ret_val = initStep();
 
     if (ret_val != 0) {
-        return 1;
-    }
+        return ret_val;
+    } 
+
+
+// DEBUG DELETE
+    int x, y, z;
+    //while (1) {
+   // Read the acceleration data
+        read_acceleration(&x, &y, &z);
+
+        // Print the acceleration values (in mg)
+        printf("X: %d mg, Y: %d mg, Z: %d mg\n", x, y, z);
+
+        Choice pos = read_position();
+        printf("Position: %s\n", enumChoiceToString(pos));
+    //DELETE
+
 
     if (is_server) {
         ret_val = idleStep();
 
         if (ret_val != 0) {
-            return 1;
+            return ret_val;
         }
     } else {
         // TODO, pot check for null ip, but need to figure out where
         ret_val = searchStep(server_ip);
 
         if (ret_val != 0) {
-            return 1;
+            return ret_val;
         }
     }
 
     for (int i = 0; i < 1; i++) {
         ret_val = chooseStep(is_server);
         if (ret_val != 0) {
-            return 1;
+            return ret_val;
         }
 
         ret_val = resultStep();
         if (ret_val != 0) {
-            return 1;
+            return ret_val;
         }
 
         ret_val = stopStep();
         if (ret_val != 0) {
-            return 1;
+            return ret_val;
         }
     }
 
@@ -59,6 +76,11 @@ int initStep() {
     int ret_val = initialize_tcp(TCP_PORT);
     if (ret_val != 0) {
         return 1;
+    }
+
+    ret_val = init_LIS3DH();
+    if (ret_val != 0) {
+        return ret_val;
     }
 
     return 0;
@@ -91,10 +113,8 @@ int idleStep() {
         return 1;
     }
 
-    
     return 0;
 }
-
 
 int searchStep(const char *server_ip) {
     if (connect_to_server(server_ip) != 0) {
@@ -137,11 +157,12 @@ int chooseStep(bool is_server) {
 
     // Simulate player choice
     if (is_server) {
-        sleep(1);
+        sleep(getRandomSleepTime(3));
         setOwnChoice(getRandomChoice());
     } else {
-        sleep(2);
-        setOwnChoice(getRandomChoice());
+        //clinet with accelerometer
+        sleep(1);
+        setOwnChoice(read_position());
     }
 
     // Wait for the opponents response
@@ -154,6 +175,15 @@ Choice getRandomChoice() {
     srand(time(NULL)); // since using time should be different everytime we run the programm
 
     return (Choice)(rand() % 3);
+}
+
+
+Choice getRandomSleepTime(int maxTime) {
+    srand(time(NULL)); // since using time should be different everytime we run the programm
+    if (maxTime == 0) {
+        maxTime = 3; // If value is 0, set it to 2
+    }
+    return (Choice)(rand() % maxTime);
 }
 
 void* waitForResponse(void* arg) {
