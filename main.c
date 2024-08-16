@@ -5,7 +5,6 @@
 #include <unistd.h>         // Needed for close(), usleep(), etc.
 #include <sys/ioctl.h>      // Needed for ioctl()
 #include <linux/i2c-dev.h>  // Needed for I2C_SLAVE
-#include "gpio_control.h"
 #include "tcp_helper.h"
 #include "step_contoller.h"
 #include "per_axis.h"

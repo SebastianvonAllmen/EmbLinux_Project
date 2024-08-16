@@ -7,7 +7,6 @@ pkg_check_modules(GPIOD REQUIRED libgpiod)
 include_directories(header)
 
 add_executable(EmbLinux_Project main.c 
-    source/gpio_control.c 
     source/tcp_helper.c 
     source/step_controller.c
     source/per_axis.c

@@ -9,6 +9,8 @@
         "per_axis.h": "c",
         "stdio.h": "c",
         "ioctl.h": "c",
-        "fcntl.h": "c"
+        "fcntl.h": "c",
+        "cstdlib": "c",
+        "string.h": "c"
 }
 }
