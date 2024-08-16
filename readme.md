@@ -27,5 +27,8 @@ sudo apt install libgpiod-dev
 sudo apt-get install libi2c-dev i2c-tools
 ```
 
-
+executing:
+```
+./EmbLinux_Project client 146.136.88.38
+```
 

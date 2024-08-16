@@ -8,6 +8,7 @@
 #define TCP_PORT 8888
 #define REST_PORT 8000
 #define LIS3DH_ADDR 0x18   // I2C address of the LIS3DH
+#define MAXPLAYCOUNT 3   // I2C address of the LIS3DH
 
 typedef enum {
     ROCK = 0,
