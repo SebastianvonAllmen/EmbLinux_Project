@@ -92,9 +92,9 @@ Choice read_position() {
     }
     // Check if x is greater than both y and z
     if (x > y && x > z) {
-        position = SCISSORS;
-    } else if (y > x && y > z) {
         position = ROCK;
+    } else if (y > x && y > z) {
+        position = SCISSORS;
     } else if (z > x && z > y) {
         position = PAPER;
     } else {
