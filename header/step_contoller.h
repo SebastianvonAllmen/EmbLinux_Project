@@ -31,5 +31,6 @@ void logChoice(char* message, Choice choice);
 const char* enumChoiceToString(Choice choice);
 int resultStep();
 int stopStep();
+void countdownPlay();
 
 #endif // STEP_CONTROLLER_H

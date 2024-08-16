@@ -27,22 +27,6 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
         return ret_val;
     } 
 
-// // DEBUG DELETE
-//     int x, y, z;
-//     //while (1) {
-//    // Read the acceleration data
-//     sprintf(buffer, "Play Round: %d", play_counter);
-//     puts(buffer);
-//     sprintf(buffer, "%d rounds are played. %d round to go. You have %d wins", play_counter, (MAXPLAYCOUNT - play_counter), win_counter);
-//     puts(buffer);
-//     read_acceleration(&x, &y, &z);
-//        // Print the acceleration values (in mg)
-//     printf("X: %d mg, Y: %d mg, Z: %d mg\n", x, y, z);
-
-//         Choice pos = read_position();
-//     printf("Position: %s\n", enumChoiceToString(pos));
-//     //DELETE
-
     if (is_server) {
         ret_val = idleStep();
 
@@ -156,7 +140,7 @@ int searchStep(const char *server_ip) {
 int chooseStep(bool is_server) {
     pthread_t response_thread;
 
-    puts("Starting Game: Rock, Paper, Scissors");
+    // puts("Starting Game: Rock, Paper, Scissors");
     sprintf(buffer, "Play Round: %d", play_counter);
     puts(buffer);
 
@@ -172,13 +156,7 @@ int chooseStep(bool is_server) {
         setOwnChoice(getRandomChoice());
     } else {
         //clinet with accelerometer
-        printf("ROCK...");
-        sleep(1);
-        printf("PAPER...");
-        sleep(1);
-        printf("SCISSORS...");
-        sleep(1);
-        printf("--SHOOT!!\n");
+        countdownPlay();
         setOwnChoice(read_position());
     }
 
@@ -260,6 +238,23 @@ const char* enumChoiceToString(Choice choice) {
         default:
             return "Unknown";
     }
+}
+
+void countdownPlay(){
+    printf("ROCK...");
+    fflush(stdout); // Flush the buffer to ensure immediate output
+    sleep(1);       // Sleep for 1 second
+
+    printf("PAPER...");
+    fflush(stdout); // Flush the buffer to ensure immediate output
+    sleep(1);       // Sleep for 1 second
+
+    printf("SCISSORS...");
+    fflush(stdout); // Flush the buffer to ensure immediate output
+    sleep(1);       // Sleep for 1 second
+
+    printf("--SHOOT!!\n");
+    fflush(stdout); // Flush the buffer to ensure immediate output
 }
 
 int resultStep() {
