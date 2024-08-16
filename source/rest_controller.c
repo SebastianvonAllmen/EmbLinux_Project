@@ -6,6 +6,7 @@
 #include <microhttpd.h>
 
 #include "rest_controller.h"
+#include "file_helper.h"
 
 
 #define REST_PORT 8080
@@ -44,20 +45,25 @@ enum MHD_Result answer_to_connection(void *cls, struct MHD_Connection *connectio
                                      size_t *upload_data_size, void **con_cls) {
     const char *title = "Welcome to the ever lasting War between AI and Humans\n"
                         "This page allows you to access all results from every game ever played against this AI\n"
-                        "CSV Structure: {time [ms], choice server, choice client, did_ai_win}\n";
+                        "{time [ms], choice server, choice client, result_from_ai_perspective}\n";
 
-    const char *text = "1234023, 0, 1, true\n";
+    const char *text = readResultsFromFile();
+    char *response;
 
-    // Allocate enough space for the concatenated string
-    size_t response_size = strlen(title) + strlen(text) + 1; // +1 for the null terminator
-    char *response = (char *)malloc(response_size);
+    if (text != NULL) {
+        // Allocate enough space for the concatenated string
+        size_t response_size = strlen(title) + strlen(text) + 1; // +1 for the null terminator
+        response = (char *)malloc(response_size);
 
-    if (response == NULL) {
-        return MHD_NO; // Failed to allocate memory
+        if (response == NULL) {
+            return MHD_NO; // Failed to allocate memory
+        }
+
+        // Concatenate title and text into the response
+        snprintf(response, response_size, "%s%s", title, text);
+    } else {
+        response = (char *) title;
     }
-
-    // Concatenate title and text into the response
-    snprintf(response, response_size, "%s%s", title, text);
 
     struct MHD_Response *mhd_response;
     enum MHD_Result ret;

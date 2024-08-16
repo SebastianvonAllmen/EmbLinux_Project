@@ -3,6 +3,7 @@
         "unistd.h": "c",
         "gpio_control.h": "c",
         "step_idle.h": "c",
-        "tcp_helper.h": "c"
+        "tcp_helper.h": "c",
+        "step_contoller.h": "c"
     }
 }

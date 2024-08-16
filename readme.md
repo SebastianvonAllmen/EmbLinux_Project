@@ -1,14 +1,15 @@
-Use this repo to copy files to raspy
+might need to add the /build
+``` bash
+mkdir /build 
+```
 
-might need to add the /build folder manually
 
-
-free port:
+free port: (testing)
 ```
 sudo lsof -t -i:8888 | xargs sudo kill
 ```
 
-call port
+call port (testing)
 ``` 
 nc 146.136.88.38 8888
 ```
@@ -28,7 +29,6 @@ sudo apt-get install libmicrohttpd-dev
 ```
 
 # Run
-First start ngnix on the server 
-then start the server programm itself
+First start the server programm itself
 then start the client programm
 

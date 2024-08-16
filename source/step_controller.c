@@ -5,6 +5,7 @@
 
 #include "step_contoller.h"
 #include "tcp_helper.h"
+#include "file_helper.h"
 
 bool is_server = false;
 const char* server_ip;
@@ -35,7 +36,7 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
         }
     }
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 3; i++) {
         ret_val = chooseStep(is_server);
         if (ret_val != 0) {
             return 1;
@@ -232,6 +233,10 @@ int resultStep() {
     }
 
     puts("\n");
+
+    if (is_server) {
+        writeResultToFile(own_choice, opponents_choice);
+    }
 
     return 0;
 }
