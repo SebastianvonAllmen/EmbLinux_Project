@@ -18,8 +18,6 @@ char buffer[50];
 int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
     is_server = cmd_is_server;
     server_ip = cmd_server_ip;
-    win_counter = 0;
-    play_counter = 1;
     bool continue_programm = true;
 
 
@@ -30,6 +28,8 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
     } 
 
     while(continue_programm) {
+        setGameLogic();
+
         if (is_server) {
             ret_val = idleStep();
 
@@ -86,6 +86,11 @@ int initStep() {
     }
 
     return 0;
+}
+
+void setGameLogic() {
+    win_counter = 0;
+    play_counter = 1;
 }
 
 int idleStep() {

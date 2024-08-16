@@ -19,6 +19,7 @@ typedef enum {
 
 int startSteps(const bool cmd_is_server, const char* cmd_server_ip);
 int initStep();
+void setGameLogic();
 int idleStep();
 int searchStep(const char* ipAdress);
 int chooseStep(bool is_server);
