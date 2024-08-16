@@ -1,10 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
 #include "step_contoller.h"
 #include "tcp_helper.h"
-#include "gpio_control.h"
 
 bool is_server = false;
 const char* server_ip;
@@ -59,13 +59,7 @@ int initStep() {
     int ret_val = initialize_tcp(TCP_PORT);
     if (ret_val != 0) {
         return 1;
-    }
-
-    ret_val = initialize_gpio();
-    if (ret_val != 0) {
-        return 1;
-    }
-    
+    }   
 
     return 0;
 }
@@ -249,9 +243,6 @@ int stopStep() {
 
     // Close the client socket
     close_socket();
-
-    // Release GPIO line and close chip
-    close_gpio();
 
     return 0;
 }

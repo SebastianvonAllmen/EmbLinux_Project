@@ -3,7 +3,6 @@
 #include <unistd.h>    // For close
 #include <pthread.h>
 
-#include "gpio_control.h"
 #include "tcp_helper.h"
 #include "step_contoller.h"
 #include "rest_controller.h"

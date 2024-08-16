@@ -14,10 +14,10 @@ include_directories(header ${GPIOD_INCLUDE_DIRS} ${MICROHTTPD_INCLUDE_DIRS})
 # Add the executable
 add_executable(EmbLinux_Project 
     main.c 
-    source/gpio_control.c 
     source/tcp_helper.c 
     source/step_controller.c
     source/rest_controller.c
+    source/file_helper.c
 )
 
 # Link the necessary libraries
