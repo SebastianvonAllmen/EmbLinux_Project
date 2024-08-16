@@ -1,55 +1,84 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
 #include "step_contoller.h"
 #include "tcp_helper.h"
-#include "gpio_control.h"
+#include "per_axis.h"
 
 bool is_server = false;
 const char* server_ip;
 Choice own_choice, opponents_choice;
+int win_counter;
+int play_counter;
+char buffer[50]; 
 
 int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
     is_server = cmd_is_server;
     server_ip = cmd_server_ip;
+    win_counter = 0;
+    play_counter = 1;
 
     int ret_val = initStep();
 
     if (ret_val != 0) {
-        return 1;
-    }
+        return ret_val;
+    } 
+
+// // DEBUG DELETE
+//     int x, y, z;
+//     //while (1) {
+//    // Read the acceleration data
+//     sprintf(buffer, "Play Round: %d", play_counter);
+//     puts(buffer);
+//     sprintf(buffer, "%d rounds are played. %d round to go. You have %d wins", play_counter, (MAXPLAYCOUNT - play_counter), win_counter);
+//     puts(buffer);
+//     read_acceleration(&x, &y, &z);
+//        // Print the acceleration values (in mg)
+//     printf("X: %d mg, Y: %d mg, Z: %d mg\n", x, y, z);
+
+//         Choice pos = read_position();
+//     printf("Position: %s\n", enumChoiceToString(pos));
+//     //DELETE
 
     if (is_server) {
         ret_val = idleStep();
 
         if (ret_val != 0) {
-            return 1;
+            return ret_val;
         }
     } else {
         // TODO, pot check for null ip, but need to figure out where
         ret_val = searchStep(server_ip);
 
         if (ret_val != 0) {
-            return 1;
+            return ret_val;
         }
     }
 
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < MAXPLAYCOUNT; i++) {
         ret_val = chooseStep(is_server);
         if (ret_val != 0) {
-            return 1;
+            return ret_val;
         }
 
         ret_val = resultStep();
         if (ret_val != 0) {
-            return 1;
+            return ret_val;
         }
-
-        ret_val = stopStep();
-        if (ret_val != 0) {
-            return 1;
+        if (i < MAXPLAYCOUNT - 1) {
+            if (is_server) {
+                sleep(getRandomSleepTime(2));
+            } else {
+                sleep(getRandomSleepTime(4));
+            }
         }
+    }
+    
+    ret_val = stopStep();
+    if (ret_val != 0) {
+        return ret_val;
     }
 
     return 0;
@@ -61,12 +90,10 @@ int initStep() {
         return 1;
     }
 
-    ret_val = initialize_gpio();
+    ret_val = init_LIS3DH();
     if (ret_val != 0) {
-        return 1;
+        return ret_val;
     }
-    
-
     return 0;
 }
 
@@ -78,7 +105,6 @@ int idleStep() {
     }
 
     sendAndLog("Hello Client, I am ready to play!", true);
-
     // Buffer to store the response from the server
     char response[256];
     
@@ -97,10 +123,8 @@ int idleStep() {
         return 1;
     }
 
-    
     return 0;
 }
-
 
 int searchStep(const char *server_ip) {
     if (connect_to_server(server_ip) != 0) {
@@ -134,6 +158,8 @@ int chooseStep(bool is_server) {
     pthread_t response_thread;
 
     puts("Starting Game: Rock, Paper, Scissors");
+    sprintf(buffer, "Play Round: %d", play_counter);
+    puts(buffer);
 
     // Start the background thread to wait for a potential response
     if (pthread_create(&response_thread, NULL, waitForResponse, NULL) != 0) {
@@ -143,11 +169,12 @@ int chooseStep(bool is_server) {
 
     // Simulate player choice
     if (is_server) {
-        sleep(1);
+        sleep(getRandomSleepTime(3));
         setOwnChoice(getRandomChoice());
     } else {
-        sleep(2);
-        setOwnChoice(getRandomChoice());
+        //clinet with accelerometer
+        sleep(1);
+        setOwnChoice(read_position());
     }
 
     // Wait for the opponents response
@@ -160,6 +187,14 @@ Choice getRandomChoice() {
     srand(time(NULL)); // since using time should be different everytime we run the programm
 
     return (Choice)(rand() % 3);
+}
+
+Choice getRandomSleepTime(int maxTime) {
+    srand(time(NULL)); // since using time should be different everytime we run the programm
+    if (maxTime == 0) {
+        maxTime = 3; // If value is 0, set it to 2
+    }
+    return (Choice)(rand() % maxTime);
 }
 
 void* waitForResponse(void* arg) {
@@ -197,10 +232,8 @@ void setOwnChoice(Choice choice) {
     sendAndLog(message, false);
 }
 
-
 void setOpChoice(Choice choice) {
     opponents_choice = choice;
-
     logChoice("Opponent's choice set to", choice);
 }
 
@@ -228,20 +261,30 @@ int resultStep() {
     puts("\n");
     // TODO potentially add nullcheck
     if (opponents_choice == own_choice) {
-        printf("It's a draw! Both chose %s.\n", enumChoiceToString(own_choice));
+        printf("It's a draw! Both chose %s. Rematch!!\n", enumChoiceToString(own_choice));
+        play_counter--;
     } else if ((own_choice == ROCK && opponents_choice == SCISSORS) ||
                (own_choice == PAPER && opponents_choice == ROCK) ||
                (own_choice == SCISSORS && opponents_choice == PAPER)) {
         printf("You win! %s beats %s.\n", enumChoiceToString(own_choice), enumChoiceToString(opponents_choice));
+        win_counter++;
     } else {
         printf("You lose! %s beats %s.\n", enumChoiceToString(opponents_choice), enumChoiceToString(own_choice));
     }
-
+    if (play_counter == MAXPLAYCOUNT){
+        if (win_counter > MAXPLAYCOUNT / 2){
+            sprintf(buffer, "WINNER!!! Winning %d out of %d", win_counter, MAXPLAYCOUNT);
+        } else {
+            sprintf(buffer, "FUUU!!! Winning only %d out of %d", win_counter, MAXPLAYCOUNT);
+        }
+    } else {
+        sprintf(buffer, "%d rounds are played. %d round to go. You have %d wins", play_counter, (MAXPLAYCOUNT - play_counter), win_counter);
+    }
+    puts(buffer);
     puts("\n");
-
+    play_counter++;
     return 0;
 }
-
 
 int stopStep() {
     puts("Hope you enjoyed playing!!");
@@ -249,9 +292,6 @@ int stopStep() {
 
     // Close the client socket
     close_socket();
-
-    // Release GPIO line and close chip
-    close_gpio();
 
     return 0;
 }

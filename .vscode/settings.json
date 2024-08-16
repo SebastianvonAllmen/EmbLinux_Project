@@ -3,6 +3,16 @@
         "unistd.h": "c",
         "gpio_control.h": "c",
         "step_idle.h": "c",
-        "tcp_helper.h": "c"
-    }
+        "tcp_helper.h": "c",
+        "compare": "c",
+        "step_contoller.h": "c",
+        "per_axis.h": "c",
+        "stdio.h": "c",
+        "ioctl.h": "c",
+        "fcntl.h": "c",
+        "cstdlib": "c",
+        "string.h": "c",
+        "type_traits": "c"
+    },
+    "C_Cpp.intelliSenseEngineFallback": "enabled"
 }
