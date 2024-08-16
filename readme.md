@@ -14,17 +14,21 @@ nc 146.136.88.38 8888
 ```
 
 device ip for mvp
-````
+```
 146.136.88.38 - SvA
 146.136.88.26 - RC
 146.136.90.42 - Sva Host
 ```
 
 needs:
-```
+``` bash
 sudo apt install gpiod
 sudo apt install libgpiod-dev
+sudo apt-get install libmicrohttpd-dev
 ```
 
-
+# Run
+First start ngnix on the server 
+then start the server programm itself
+then start the client programm
 

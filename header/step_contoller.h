@@ -6,7 +6,6 @@
 #include <pthread.h>
 
 #define TCP_PORT 8888
-#define REST_PORT 8000
 
 typedef enum {
     ROCK = 0,

@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>    // For close
+#include <pthread.h>
+
 #include "gpio_control.h"
 #include "tcp_helper.h"
 #include "step_contoller.h"
-
+#include "rest_controller.h"
 
 int main(int argc, char *argv[]) {
     // Check if the correct number of arguments is provided
@@ -13,9 +15,23 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    pthread_t rest_api_thread;
+
     // Figure out which mode to run
     if (strcmp(argv[1], "server") == 0) { 
-        return startSteps(true, NULL);
+        // Start the REST API server in a background thread
+        if (pthread_create(&rest_api_thread, NULL, start_rest_api, NULL) != 0) {
+            puts("Error: Failed to create REST API thread.");
+            return 1;
+        }
+
+        int ret_val = startSteps(true, NULL);
+
+        stop_rest_api();
+
+        pthread_join(rest_api_thread, NULL);
+
+        return ret_val;
     } else if (strcmp(argv[1], "client") == 0) {
         if (argc < 3) {
             fprintf(stderr, "Usage: %s client <server_ip>\n", argv[0]);
