@@ -12,6 +12,7 @@ bool is_server = false;
 const char* server_ip;
 Choice own_choice, opponents_choice;
 int win_counter;
+int lose_counter;
 int play_counter;
 char buffer[50]; 
 
@@ -90,6 +91,7 @@ int initStep() {
 
 void setGameLogic() {
     win_counter = 0;
+    lose_counter = 0;
     play_counter = 1;
 }
 
@@ -286,8 +288,10 @@ int resultStep() {
         win_counter++;
     } else {
         printf("You lose! %s beats %s.\n", enumChoiceToString(opponents_choice), enumChoiceToString(own_choice));
+        lose_counter++;
     }
-    if (play_counter == MAXPLAYCOUNT){
+    if (play_counter == MAXPLAYCOUNT || win_counter > MAXPLAYCOUNT / 2 ||win_counter > MAXPLAYCOUNT / 2) {
+        play_counter = MAXPLAYCOUNT;
         if (win_counter > MAXPLAYCOUNT / 2){
             sprintf(buffer, "WINNER!!! Winning %d out of %d", win_counter, MAXPLAYCOUNT);
         } else {
