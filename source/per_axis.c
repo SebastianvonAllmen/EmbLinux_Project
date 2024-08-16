@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>  // Include this to define int16_t, uint16_t, etc.
 #include <fcntl.h>
