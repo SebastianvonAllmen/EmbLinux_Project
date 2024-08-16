@@ -6,6 +6,7 @@
         "compare": "c",
         "step_contoller.h": "c",
         "per_axis.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "ioctl.h": "c"
     }
 }

@@ -10,8 +10,6 @@
 #include "step_contoller.h"
 #include "per_axis.h"
 
-#define LIS3DH_ADDR 0x18   // I2C address of the LIS3DH
-
 int main(int argc, char *argv[]) {
     // Check if the correct number of arguments is provided
     if (argc < 2) {
