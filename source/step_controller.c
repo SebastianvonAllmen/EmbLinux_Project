@@ -20,6 +20,8 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
     server_ip = cmd_server_ip;
     win_counter = 0;
     play_counter = 1;
+    bool continue_programm = true;
+
 
     int ret_val = initStep();
 
@@ -27,34 +29,40 @@ int startSteps(const bool cmd_is_server, const char* cmd_server_ip) {
         return ret_val;
     } 
 
-    if (is_server) {
-        ret_val = idleStep();
+    while(continue_programm) {
+        if (is_server) {
+            ret_val = idleStep();
 
-        if (ret_val != 0) {
-            return ret_val;
-        }
-    } else {
-        // TODO, pot check for null ip, but need to figure out where
-        ret_val = searchStep(server_ip);
+            if (ret_val != 0) {
+                return ret_val;
+            }
+        } else {
+            // TODO, pot check for null ip, but need to figure out where
+            ret_val = searchStep(server_ip);
 
-        if (ret_val != 0) {
-            return ret_val;
-        }
-    }
-
-    while (play_counter <= MAXPLAYCOUNT) {
-        ret_val = chooseStep(is_server);
-        if (ret_val != 0) {
-            return ret_val;
+            if (ret_val != 0) {
+                return ret_val;
+            }
         }
 
-        ret_val = resultStep();
-        if (ret_val != 0) {
-            return 1;
+        while (play_counter <= MAXPLAYCOUNT) {
+            ret_val = chooseStep(is_server);
+            if (ret_val != 0) {
+                return ret_val;
+            }
+
+            ret_val = resultStep();
+            if (ret_val != 0) {
+                return 1;
+            }
+
+            if (play_counter < MAXPLAYCOUNT) {
+                sleep(3);
+            }
         }
 
-        if (play_counter < MAXPLAYCOUNT) {
-            sleep(3);
+        if (!is_server) {
+            continue_programm = false;
         }
     }
 
@@ -152,7 +160,7 @@ int chooseStep(bool is_server) {
 
     // Simulate player choice
     if (is_server) {
-        sleep(getRandomSleepTime(5));
+        sleep(1); // Fixed wait for better UX
         setOwnChoice(getRandomChoice());
     } else {
         //clinet with accelerometer
@@ -162,6 +170,8 @@ int chooseStep(bool is_server) {
 
     // Wait for the opponents response
     pthread_join(response_thread, NULL);
+
+    printChoices();
 
     return 0;
 }
@@ -195,7 +205,6 @@ void* waitForResponse(void* arg) {
 
     // Validate and set the opponent's choice
     if (received_choice >= ROCK && received_choice <= SCISSORS) {
-        logChoice("Opponent's choice received:", (Choice)received_choice);
         setOpChoice((Choice)received_choice);
     } else {
         puts("Unexpected response from opponent.");
@@ -207,8 +216,6 @@ void* waitForResponse(void* arg) {
 void setOwnChoice(Choice choice) {
     own_choice = choice;
 
-    logChoice("Own choice set to", choice);
-
     // Send the enum value as an integer
     char message[10];
     snprintf(message, sizeof(message), "%d", choice); // Convert enum to string
@@ -217,14 +224,18 @@ void setOwnChoice(Choice choice) {
 
 void setOpChoice(Choice choice) {
     opponents_choice = choice;
-    logChoice("Opponent's choice set to", choice);
 }
 
-void logChoice(char* message, Choice choice) {
+void logSingleChoice(char* message, Choice choice) {
     const char* choice_str = enumChoiceToString(choice);
 
     // Logging the message and choice
     printf("%s: %s\n", message, choice_str);
+}
+
+void printChoices() {
+    logSingleChoice("Own choice set to", own_choice);
+    logSingleChoice("Opponent's choice set to", opponents_choice);
 }
 
 const char* enumChoiceToString(Choice choice) {

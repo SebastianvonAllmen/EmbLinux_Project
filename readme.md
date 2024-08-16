@@ -6,7 +6,7 @@ mkdir /build
 
 free port: (testing)
 ```
-sudo lsof -t -i:8888 | xargs sudo kill
+sudo lsof -t -i:8888 | xargs sudo kill && sudo lsof -t -i:8080 | xargs sudo kill
 ```
 
 call port (testing)
